@@ -5,6 +5,7 @@
 Leo.configure do |config|
   config.xls_name = "Localizable.xls"
   config.strings_name = "Localizable.strings"
+  config.ask_confirmation = true
 end
 #
 # You can now run `leo xls` to create a translation

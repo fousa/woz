@@ -5,7 +5,8 @@ module Leo
     def self.default
       new \
       :xls_name => "Localizations.xls",
-      :strings_name => "Localizations.strings"
+      :strings_name => "Localizations.strings",
+      :ask_confirmation => false
     end
   end
 end

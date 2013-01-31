@@ -1,3 +1,5 @@
+require "highline/import"
+
 require "spreadsheet"
 Spreadsheet.client_encoding = 'UTF-8'
 
@@ -43,6 +45,7 @@ module Leo
 # Leo.configure do |config|
 #   config.xls_name = "Localizations.xls"
 #   config.strings_name = "Localizations.strings"
+#   config.ask_confirmation = false
 # end
 #
 # You can now run `leo xls` to create a translation
@@ -107,8 +110,13 @@ TEXT
         end
 
         xls = generate_spreadsheet list
-        xls.write(File.join(output_dir, Leo.config.xls_name))
-        puts "# xls generated at #{File.join(output_dir, Leo.config.xls_name)}"
+
+        if !Leo.config.ask_confirmation || ask("! this xls file will be overwrite type 'y' to confirm: ") == "y"
+          xls.write(File.join(output_dir, Leo.config.xls_name))
+          puts "# xls generated at #{File.join(output_dir, Leo.config.xls_name)}"
+        else
+          puts "! xls generation canceled"
+        end
       end
 
       def parse_xls file
@@ -149,19 +157,24 @@ TEXT
           file_path = File.join(proj_dir, Leo.config.strings_name)
           cocoa_languages_array << "@\"#{language}\""
 
-          if File.exists?(file_path)
-            file = File.open(file_path, "w")
-          else
-            file = File.new(file_path, "w")
-          end
-          list[language].each do |key, value|
-            if value.nil?
-              file.puts "\"#{key}\" = \"MISSING VALUE\";" unless key.nil?
+          new_file = !File.exists?(file_path)
+          if new_file || !Leo.config.ask_confirmation || ask("! this #{language} strings file will be overwrite type 'y' to confirm: ") == "y"
+            if new_file
+              file = File.new(file_path, "w")
             else
-              file.puts "\"#{key}\" = \"#{value}\";"
+              file = File.open(file_path, "w")
             end
+            list[language].each do |key, value|
+              if value.nil?
+                file.puts "\"#{key}\" = \"MISSING VALUE\";" unless key.nil?
+              else
+                file.puts "\"#{key}\" = \"#{value}\";"
+              end
+            end
+            puts "# #{language} strings generated at #{file_path}"
+          else
+            puts "! #{language} strings generation canceled"
           end
-          puts "# strings generated at #{file_path}"
         end
         cocoa_languages_array << "nil"
         cocoa_array << "#{cocoa_languages_array.join(', ')}]"
