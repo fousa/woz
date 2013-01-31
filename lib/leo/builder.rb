@@ -136,6 +136,8 @@ TEXT
         file = File.join(Dir.pwd, Leo.config.xls_name)
         output_dir = get_output_dir(file)
 
+        fail "! xls file not found, specify the filename in the .leorc file" unless File.exists?(file)
+
         list = parse_xls file
         cocoa_array = "#define kLanguages [NSArray arrayWithObjects:"
         cocoa_languages_array = []
