@@ -10,14 +10,14 @@ module Leo
         file = File.join(Dir.pwd, config_file_name)
 
         if File.exists?(file)
-          warn "[skip] '#{file}' already exists"
+          warn "# '#{file}' already exists"
         elsif File.exists?(file.downcase)
-          warn "[skip] '#{file.downcase}' exists, which could conflict with `#{file}'"
+          warn "# '#{file.downcase}' exists, which could conflict with `#{file}'"
         else
-          puts "[add] writing '#{file}'"
+          puts "# writing '#{file}'"
           File.open(file, "w") { |f| f.write(instructions_text) }
         end
-        puts "[done] leo initialized!"
+        puts "# leo initialized!"
       end
 
       def generate_xls
@@ -53,8 +53,10 @@ TEXT
       end
 
       def parse_strings list, file
+        fail "! strings file not found, specify the filename in the .leorc file" unless File.exists?(File.join(file, Leo.config.strings_name))
+
         language = get_language file
-        puts "# Parsing #{language}"
+        puts "# parsing #{language}"
         File.open(File.join(file, Leo.config.strings_name), "r").each do |row|
           if row.start_with? '"'
             if splitted = row.split(/"/, 5)
