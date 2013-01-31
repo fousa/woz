@@ -1,0 +1,11 @@
+# [Leo](http://github.com/fousa/leo)
+# This file is used by Leo to make exporting to
+# xls or strings even easier.
+# 
+ Leo.configure do |config|
+   config.xls_name = "Localizable.xls"
+   config.strings_name = "Localizable.strings"
+ end
+#
+# You can now run `leo xls` to create a translation
+# xls file.

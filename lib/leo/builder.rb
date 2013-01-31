@@ -21,7 +21,7 @@ module Leo
       end
 
       def generate_xls
-        raise Leo.config.inspect
+        generate_translation_xls
       end
 
       protected
@@ -52,15 +52,10 @@ TEXT
         name
       end
 
-      def get_language name
-        language = File.basename(name).gsub ".lproj", ""
-        language
-      end
-      def parse_strings list, file, strings_filename
+      def parse_strings list, file
         language = get_language file
-        puts "--- Parse entries for #{language}"
-
-        File.open(file + "/#{strings_filename}", "r").each do |row|
+        puts "# Parsing #{language}"
+        File.open(File.join(file, Leo.config.strings_name), "r").each do |row|
           if row.start_with? '"'
             if splitted = row.split(/"/, 5)
               if list[splitted[1]].nil?
@@ -72,11 +67,16 @@ TEXT
         end
       end
 
+      def get_language name
+        language = File.basename(name).gsub ".lproj", ""
+        language
+      end
+
       def generate_spreadsheet list
         book  = Spreadsheet::Workbook.new
         sheet = book.create_worksheet
 
-        languages = list.values.map(&:keys).uniq.flatten
+        languages = list.values.map(&:keys).flatten.uniq
         sheet.row(0).concat [KEY_COLUMN, languages].flatten
 
         index = 1
@@ -92,26 +92,17 @@ TEXT
         book
       end
 
-      def generate_translation_xls file
-        output_dir = get_output_dir File.absolute_path(ARGV.first)
-        puts "--- Output directory set to #{output_dir}"
-
-        strings_filename = File.basename(ARGV.first)
-        puts "--- Strings filename set to #{strings_filename}"
-
+      def generate_translation_xls
+        file = File.join(Dir.pwd, "en.lproj", Leo.config.strings_name)
+        output_dir = get_output_dir(file)
         list = {}
         Dir.foreach(output_dir) do |entry|
-          if entry.include? ".lproj"
-            parse_strings list, File.absolute_path(entry), strings_filename
-          end
+          parse_strings list, File.join(Dir.pwd, entry) if entry.include? ".lproj"
         end
 
-        puts "--- Generate xls"
-        xls = generate_xls list
-
-        output_filename = strings_filename.gsub(".strings", "")
-        puts "--- Write xls to #{output_dir}/#{output_filename}.xls"
-        xls.write("#{output_dir}/#{output_filename}.xls")
+        xls = generate_spreadsheet list
+        xls.write(File.join(output_dir, Leo.config.xls_name))
+        puts "# XLS generated at #{File.join(output_dir, Leo.config.xls_name)}"
       end
 
       def parse_xls file
