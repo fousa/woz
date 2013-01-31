@@ -1,9 +1,9 @@
-require "leo/version"
-require "leo/configuration"
-require "leo/builder"
-require "leo/logger"
+require "woz/version"
+require "woz/configuration"
+require "woz/builder"
+require "woz/logger"
 
-module Leo
+module Woz
   class << self
     def config
       @config ||= Configuration.default

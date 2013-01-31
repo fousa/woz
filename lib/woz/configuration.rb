@@ -1,11 +1,11 @@
 require "ostruct"
 
-module Leo
+module Woz
   class Configuration < OpenStruct
     def self.default
       new \
-      :xls_name => "Localizations.xls",
-      :strings_name => "Localizations.strings",
+      :xls_filename => "Localizations.xls",
+      :strings_filename => "Localizations.strings",
       :ask_confirmation => false
     end
   end

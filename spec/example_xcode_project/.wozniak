@@ -1,0 +1,12 @@
+# [Woz](http://github.com/fousa/woz)
+# This file is used by Woz to make exporting to
+# xls or strings even easier.
+# 
+Woz.configure do |config|
+  config.xls_filename = "Localizable.xls"
+  config.strings_filename = "Localizable.strings"
+  config.ask_confirmation = false
+end
+#
+# You can now run `woz xls` to create a translation
+# xls file.

@@ -3,7 +3,7 @@ require "highline/import"
 require "spreadsheet"
 Spreadsheet.client_encoding = 'UTF-8'
 
-module Leo
+module Woz
   class Builder
     KEY_COLUMN = "keys"
 
@@ -19,7 +19,7 @@ module Leo
           puts "# writing '#{file}'"
           File.open(file, "w") { |f| f.write(instructions_text) }
         end
-        puts "# leo initialized!"
+        puts "# woz initialized!"
       end
 
       def generate_xls
@@ -33,22 +33,22 @@ module Leo
       protected
 
       def config_file_name
-        ".leorc"
+        ".wozniak"
       end
 
       def instructions_text
     <<TEXT
-# [Leo](http://github.com/fousa/leo)
-# This file is used by Leo to make exporting to
+# [Woz](http://github.com/fousa/woz)
+# This file is used by Woz to make exporting to
 # xls or strings even easier.
 # 
-# Leo.configure do |config|
-#   config.xls_name = "Localizations.xls"
-#   config.strings_name = "Localizations.strings"
+# Woz.configure do |config|
+#   config.xls_filename = "Localizations.xls"
+#   config.strings_filename = "Localizations.strings"
 #   config.ask_confirmation = false
 # end
 #
-# You can now run `leo xls` to create a translation
+# You can now run `woz xls` to create a translation
 # xls file.
 TEXT
       end
@@ -60,11 +60,11 @@ TEXT
       end
 
       def parse_strings list, file
-        fail "! strings file not found, specify the filename in the .leorc file" unless File.exists?(File.join(file, Leo.config.strings_name))
+        fail "! strings file not found, specify the filename in the .wozniak file" unless File.exists?(File.join(file, Woz.config.strings_filename))
 
         language = get_language file
         puts "# parsing #{language}"
-        File.open(File.join(file, Leo.config.strings_name), "r").each do |row|
+        File.open(File.join(file, Woz.config.strings_filename), "r").each do |row|
           if row.start_with? '"'
             if splitted = row.split(/"/, 5)
               if list[splitted[1]].nil?
@@ -102,7 +102,7 @@ TEXT
       end
 
       def generate_translation_xls
-        file = File.join(Dir.pwd, "en.lproj", Leo.config.strings_name)
+        file = File.join(Dir.pwd, "en.lproj", Woz.config.strings_filename)
         output_dir = get_output_dir(file)
         list = {}
         Dir.foreach(output_dir) do |entry|
@@ -111,9 +111,9 @@ TEXT
 
         xls = generate_spreadsheet list
 
-        if !Leo.config.ask_confirmation || ask("! this xls file will be overwrite type 'y' to confirm: ") == "y"
-          xls.write(File.join(output_dir, Leo.config.xls_name))
-          puts "# xls generated at #{File.join(output_dir, Leo.config.xls_name)}"
+        if !Woz.config.ask_confirmation || ask("! this xls file will be overwrite type 'y' to confirm: ") == "y"
+          xls.write(File.join(output_dir, Woz.config.xls_filename))
+          puts "# xls generated at #{File.join(output_dir, Woz.config.xls_filename)}"
         else
           puts "! xls generation canceled"
         end
@@ -141,10 +141,10 @@ TEXT
       end
 
       def generate_translation_strings
-        file = File.join(Dir.pwd, Leo.config.xls_name)
+        file = File.join(Dir.pwd, Woz.config.xls_filename)
         output_dir = get_output_dir(file)
 
-        fail "! xls file not found, specify the filename in the .leorc file" unless File.exists?(file)
+        fail "! xls file not found, specify the filename in the .wozniak file" unless File.exists?(file)
 
         list = parse_xls file
         cocoa_array = "#define kLanguages [NSArray arrayWithObjects:"
@@ -154,11 +154,11 @@ TEXT
           proj_dir = File.join(output_dir, "#{language}.lproj")
           Dir.mkdir(proj_dir) unless File.directory?(proj_dir)
 
-          file_path = File.join(proj_dir, Leo.config.strings_name)
+          file_path = File.join(proj_dir, Woz.config.strings_filename)
           cocoa_languages_array << "@\"#{language}\""
 
           new_file = !File.exists?(file_path)
-          if new_file || !Leo.config.ask_confirmation || ask("! this #{language} strings file will be overwrite type 'y' to confirm: ") == "y"
+          if new_file || !Woz.config.ask_confirmation || ask("! this #{language} strings file will be overwrite type 'y' to confirm: ") == "y"
             if new_file
               file = File.new(file_path, "w")
             else

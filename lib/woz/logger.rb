@@ -1,4 +1,4 @@
-module Leo
+module Woz
   class Logger
     def describe(header)
       width = 50
