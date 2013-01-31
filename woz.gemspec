@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Woz::VERSION
   gem.authors       = ["Jelle Vandebeeck"]
   gem.email         = ["jelle@fousa.be"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{Generate strings files from an xls and vice versa.}
+  gem.summary       = %q{Easy strings file generate.}
+  gem.homepage      = "http://github.com/fousa/woz"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
