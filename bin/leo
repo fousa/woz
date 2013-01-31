@@ -1,0 +1,25 @@
+#! /usr/bin/ruby
+
+require "thor"
+require "leo"
+
+class LeoCommand < Thor
+  desc "xls", "creates a xls with the current strings files."
+  def xls
+    Leo::Builder.generate_xls
+  end
+
+  desc "strings", "creates the strings files from the available xls file."
+  def strings
+    Leo::Builder.generate_xls
+  end
+
+  desc "init", "creates the leo configuration file."
+  def init
+    Leo::Builder.init
+  end
+end
+
+load ".leorc" if File.exists?(".leorc")
+
+LeoCommand.start
