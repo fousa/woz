@@ -11,7 +11,7 @@ class LeoCommand < Thor
 
   desc "strings", "creates the strings files from the available xls file."
   def strings
-    Leo::Builder.generate_xls
+    Leo::Builder.generate_strings
   end
 
   desc "init", "creates the leo configuration file."

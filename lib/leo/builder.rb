@@ -24,6 +24,10 @@ module Leo
         generate_translation_xls
       end
 
+      def generate_strings
+        generate_translation_strings
+      end
+
       protected
 
       def config_file_name
@@ -104,7 +108,7 @@ TEXT
 
         xls = generate_spreadsheet list
         xls.write(File.join(output_dir, Leo.config.xls_name))
-        puts "# XLS generated at #{File.join(output_dir, Leo.config.xls_name)}"
+        puts "# xls generated at #{File.join(output_dir, Leo.config.xls_name)}"
       end
 
       def parse_xls file
@@ -128,46 +132,41 @@ TEXT
         list
       end
 
-      def generate_strings_files file
-        output_dir = get_output_dir File.absolute_path(ARGV.first)
-        puts "--- Output directory set to #{output_dir}"
+      def generate_translation_strings
+        file = File.join(Dir.pwd, Leo.config.xls_name)
+        output_dir = get_output_dir(file)
 
-        xls_filename = File.basename(ARGV.first)
-        puts "--- XLS filename set to #{xls_filename}"
-
-        puts "--- Parse xls"
-        list = parse_xls xls_filename
-
+        list = parse_xls file
         cocoa_array = "#define kLanguages [NSArray arrayWithObjects:"
-    # @"en", @"bg", @"th", @"br", @"da", @"fi", @"no", @"sv", @"grk", @"fr", @"it", @"pt", @"de", @"ro", @"hu", @"cs", @"sk", @"pl", @"es", @"ru", @"cn", @"za", @"nl", nil]
-    cocoa_languages_array = []
-    list.keys.each do |language|
-      proj_dir = "#{output_dir}/#{language}.lproj"
-      Dir.mkdir(proj_dir) unless File.directory?(proj_dir)
+        cocoa_languages_array = []
+        list.keys.compact.each do |language|
+          puts "# parsing #{language}"
+          proj_dir = File.join(output_dir, "#{language}.lproj")
+          Dir.mkdir(proj_dir) unless File.directory?(proj_dir)
 
-      file_path = "#{proj_dir}/#{xls_filename.gsub(".xls", "")}.strings"
-      cocoa_languages_array << "@\"#{language}\""
-      puts "--- Write to #{file_path}"
+          file_path = File.join(proj_dir, Leo.config.strings_name)
+          cocoa_languages_array << "@\"#{language}\""
 
-      if File.exists?(file_path)
-        file = File.open(file_path, "w")
-      else
-        file = File.new(file_path, "w")
-      end
-      list[language].each do |key, value|
-        if value.nil?
-          file.puts "\"#{key}\" = \"MISSING VALUE\";" unless key.nil?
-        else
-          file.puts "\"#{key}\" = \"#{value}\";"
+          if File.exists?(file_path)
+            file = File.open(file_path, "w")
+          else
+            file = File.new(file_path, "w")
+          end
+          list[language].each do |key, value|
+            if value.nil?
+              file.puts "\"#{key}\" = \"MISSING VALUE\";" unless key.nil?
+            else
+              file.puts "\"#{key}\" = \"#{value}\";"
+            end
+          end
+          puts "# strings generated at #{file_path}"
         end
+        cocoa_languages_array << "nil"
+        cocoa_array << "#{cocoa_languages_array.join(', ')}]"
+        cocoa_array
       end
     end
-    cocoa_languages_array << "nil"
-    cocoa_array << "#{cocoa_languages_array.join(', ')}]"
-    puts cocoa_array
   end
-end
-end
 end
 
 
