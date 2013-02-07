@@ -165,10 +165,14 @@ TEXT
               file = File.open(file_path, "w")
             end
             list[language].each do |key, value|
-              if value.nil?
-                file.puts "\"#{key}\" = \"MISSING VALUE\";" unless key.nil?
-              else
-                file.puts "\"#{key}\" = \"#{value}\";"
+              unless key.nil?
+                file.puts "\/\* #{key} \*\/"
+                if value.nil?
+                  file.puts "\"#{key}\" = \"MISSING VALUE\";"
+                else
+                  file.puts "\"#{key}\" = \"#{value}\";"
+                end
+                file.puts ""
               end
             end
             puts "# #{language} strings generated at #{file_path}"
