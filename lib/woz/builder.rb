@@ -26,8 +26,8 @@ module Woz
         generate_translation_xls
       end
 
-      def generate_strings
-        generate_translation_strings
+      def generate_strings(xls_filepath=nil)
+        generate_translation_strings(xls_filepath)
       end
 
       protected
@@ -140,9 +140,11 @@ TEXT
         list
       end
 
-      def generate_translation_strings
-        file = File.join(Dir.pwd, Woz.config.xls_filename)
-        output_dir = get_output_dir(file)
+      def generate_translation_strings(xls_filepath=nil)
+        filepath = File.expand_path(xls_filepath || Woz.config.xls_filename)
+        puts filepath.inspect
+        file = File.join(filepath)
+        output_dir = get_output_dir(File.join(File.expand_path(Woz.config.xls_filename)))
 
         fail "! xls file not found, specify the filename in the .wozniak file" unless File.exists?(file)
 

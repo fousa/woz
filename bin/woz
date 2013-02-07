@@ -10,8 +10,8 @@ class WozCommand < Thor
   end
 
   desc "strings", "creates the strings files from the available xls file."
-  def strings
-    Woz::Builder.generate_strings
+  def strings(filepath=nil)
+    Woz::Builder.generate_strings(filepath)
   end
 
   desc "setup", "creates the woz configuration file."
