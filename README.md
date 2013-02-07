@@ -53,6 +53,14 @@ There is also a possibility to generate strings files from a xls file located on
     woz strings /an_absolute_directory/the_file.xls
     woz strings ~/an_absolute_directory_inside_your_home_folder/the_file.xls
 
+## Changelog
+
+### 0.2.0
+
+- Add filename/filepath behind the 'woz strings' command in order to use that xls file for strings generation.
+- Better .strings content formatting.
+- Better overwrite confirmation messages.
+
 ## License
 
 Check out the LICENSE.txt file. Really awesome reading material...
