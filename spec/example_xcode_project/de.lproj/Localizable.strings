@@ -1,3 +1,12 @@
-"beer" = "biere";
-"title" = "MISSING VALUE";
+/* name */
 "name" = "MISSING VALUE";
+
+/* beer */
+"beer" = "biere";
+
+/* title */
+"title" = "MISSING VALUE";
+
+/* fun */
+"fun" = "Spaß";
+

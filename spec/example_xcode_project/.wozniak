@@ -5,7 +5,7 @@
 Woz.configure do |config|
   config.xls_filename = "Localizable.xls"
   config.strings_filename = "Localizable.strings"
-  config.ask_confirmation = false
+  config.ask_confirmation = true
 end
 #
 # You can now run `woz xls` to create a translation
