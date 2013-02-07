@@ -47,6 +47,12 @@ To make it even more clear, here is a simple representation of the xls file:
 
 This will genereate different '.lproj' directories with the localized files inside of them.
 
+There is also a possibility to generate strings files from a xls file located on a different location on your disk. Just pass the relative or absolute filepath to the 'woz strings' command:
+
+    woz strings a_relative_directory/the_file.xls
+    woz strings /an_absolute_directory/the_file.xls
+    woz strings ~/an_absolute_directory_inside_your_home_folder/the_file.xls
+
 ## License
 
 Check out the LICENSE.txt file. Really awesome reading material...
