@@ -111,7 +111,7 @@ TEXT
 
         xls = generate_spreadsheet list
 
-        if !Woz.config.ask_confirmation || ask("! this xls file will be overwrite type 'y' to confirm: ") == "y"
+        if !Woz.config.ask_confirmation || ask("! the project's xls file will be overwritten, type 'y' and enter to continue: ") == "y"
           xls.write(File.join(output_dir, Woz.config.xls_filename))
           puts "# xls generated at #{File.join(output_dir, Woz.config.xls_filename)}"
         else
@@ -158,7 +158,7 @@ TEXT
           cocoa_languages_array << "@\"#{language}\""
 
           new_file = !File.exists?(file_path)
-          if new_file || !Woz.config.ask_confirmation || ask("! this #{language} strings file will be overwrite type 'y' to confirm: ") == "y"
+          if new_file || !Woz.config.ask_confirmation || ask("! the project's #{language} strings file will be overwritten, type 'y' and enter to continue: ") == "y"
             if new_file
               file = File.new(file_path, "w")
             else
