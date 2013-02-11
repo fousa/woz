@@ -4,6 +4,7 @@
 # 
 Woz.configure do |config|
   config.xls_filename = "Localizable.xls"
+  config.csv_filename = "Localizable.csv"
   config.strings_filename = "Localizable.strings"
   config.ask_confirmation = true
 end
