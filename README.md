@@ -16,6 +16,16 @@ Generate a configuration file if your not planning to go by the default values:
 
 This will generate a '.wozniak' file in your project directory. This file contains the default values, and you can change them according to your needs.
 
+## Generate csv
+
+When you want to generate an csv file from your existing 'strings' files you just have to enter the following command:
+
+    woz csv
+
+Make sure that all the '.lproj' directories are in this directory and that the 'strings' file you specified in the '.wozniak' configuration are inside these '.lproj' directories.
+
+This will generate 1 'csv' file inside this direcory and here you can check out all the used translations.
+
 ## Generate xls
 
 When you want to generate an xls file from your existing 'strings' files you just have to enter the following command:

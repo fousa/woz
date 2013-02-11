@@ -5,6 +5,7 @@ module Woz
     def self.default
       new \
       :xls_filename => "Localizations.xls",
+      :csv_filename => "Localizations.csv",
       :strings_filename => "Localizations.strings",
       :ask_confirmation => false
     end

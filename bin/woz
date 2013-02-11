@@ -4,6 +4,11 @@ require "thor"
 require "woz"
 
 class WozCommand < Thor
+  desc "csv", "creates a csv with the current strings files."
+  def csv
+    Woz::Builder.generate_csv
+  end
+
   desc "xls", "creates a xls with the current strings files."
   def xls
     Woz::Builder.generate_xls

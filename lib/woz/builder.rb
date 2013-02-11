@@ -1,4 +1,5 @@
 require "highline/import"
+require "csv"
 
 require "spreadsheet"
 Spreadsheet.client_encoding = 'UTF-8'
@@ -20,6 +21,10 @@ module Woz
           File.open(file, "w") { |f| f.write(instructions_text) }
         end
         puts "# woz initialized!"
+      end
+
+      def generate_csv
+        generate_translation_csv
       end
 
       def generate_xls
@@ -44,6 +49,7 @@ module Woz
 # 
 # Woz.configure do |config|
 #   config.xls_filename = "Localizations.xls"
+#   config.csv_filename = "Localizations.csv"
 #   config.strings_filename = "Localizations.strings"
 #   config.ask_confirmation = false
 # end
@@ -81,6 +87,20 @@ TEXT
         language
       end
 
+      def generate_comma_seperated_values path, list
+        CSV.open(path, "wb") do |csv|
+          languages = list.values.map(&:keys).flatten.uniq
+          csv << [KEY_COLUMN, languages].flatten
+          list.each do |key, value|
+            row = [key]
+            languages.each do |language|
+              row << list[key][language]
+            end
+            csv << row
+          end
+        end
+      end
+
       def generate_spreadsheet list
         book  = Spreadsheet::Workbook.new
         sheet = book.create_worksheet
@@ -101,7 +121,7 @@ TEXT
         book
       end
 
-      def generate_translation_xls
+      def generate_translation(type=:xls)
         file = File.join(Dir.pwd, "en.lproj", Woz.config.strings_filename)
         output_dir = get_output_dir(file)
         list = {}
@@ -109,14 +129,26 @@ TEXT
           parse_strings list, File.join(Dir.pwd, entry) if entry.include? ".lproj"
         end
 
-        xls = generate_spreadsheet list
-
-        if !Woz.config.ask_confirmation || ask("! the project's xls file will be overwritten, type 'y' and enter to continue: ") == "y"
-          xls.write(File.join(output_dir, Woz.config.xls_filename))
-          puts "# xls generated at #{File.join(output_dir, Woz.config.xls_filename)}"
+        filename = Woz.config.send("#{type.to_s}_filename")
+        if !Woz.config.ask_confirmation || !File.exists?(filename) || ask("! the project's #{type.to_s} file will be overwritten, type 'y' and enter to continue: ") == "y"
+          if type == :xls
+            content = generate_spreadsheet list
+            content.write(File.join(output_dir, filename))
+          else
+            generate_comma_seperated_values File.join(output_dir, filename), list
+          end
+          puts "# #{type.to_s} generated at #{File.join(output_dir, filename)}"
         else
-          puts "! xls generation canceled"
+          puts "! #{type.to_s} generation canceled"
         end
+      end
+
+      def generate_translation_csv
+        generate_translation(:csv)
+      end
+
+      def generate_translation_xls
+        generate_translation(:xls)
       end
 
       def parse_xls file
