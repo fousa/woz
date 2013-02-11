@@ -1,6 +1,6 @@
 # Woz
 
-Generate your 'strings' files from an existing 'xls' file so your clients can translate their application by just entering all the value in the xls file. Of course woz will make sure you're able to generate the xls file from the existing strings file.
+Generate your 'strings' files from an existing 'xls' (or 'csv') file so your clients can translate their application by just entering all the value in the xls file. Of course woz will make sure you're able to generate the xls file from the existing strings file.
 
 ## Installation
 
@@ -16,31 +16,38 @@ Generate a configuration file if your not planning to go by the default values:
 
 This will generate a '.wozniak' file in your project directory. This file contains the default values, and you can change them according to your needs.
 
-## Generate csv
-
-When you want to generate an csv file from your existing 'strings' files you just have to enter the following command:
-
-    woz csv
-
-Make sure that all the '.lproj' directories are in this directory and that the 'strings' file you specified in the '.wozniak' configuration are inside these '.lproj' directories.
-
-This will generate 1 'csv' file inside this direcory and here you can check out all the used translations.
-
-## Generate xls
+## Export to xls
 
 When you want to generate an xls file from your existing 'strings' files you just have to enter the following command:
 
-    woz xls
+    woz export
 
 Make sure that all the '.lproj' directories are in this directory and that the 'strings' file you specified in the '.wozniak' configuration are inside these '.lproj' directories.
 
 This will generate 1 'xls' file inside this direcory and here you can check out all the used translations.
 
-## Generate strings
+## Export to csv
+
+When you want to generate an csv file from your existing 'strings' files you just have to enter one of the following commands:
+
+    woz export --csv
+    woz export -c
+
+Exporting to csv works the same way as it does for xls.
+
+## Export to xls and csv
+
+You can also export tp both formats:
+
+    woz export --both
+
+This will generate xls and csv files at the same time.
+
+## Import into strings
 
 When you want to do the opposite, that is generate your strings file from an xls file, than you'll just have to run this command:
 
-    woz strings
+    woz import
 
 Make sure the xls in this directory, and that it has the following columns:
     
@@ -62,6 +69,18 @@ There is also a possibility to generate strings files from a xls file located on
     woz strings a_relative_directory/the_file.xls
     woz strings /an_absolute_directory/the_file.xls
     woz strings ~/an_absolute_directory_inside_your_home_folder/the_file.xls
+
+The same is valid when importing from csv. Only this time you'll have to add '--csv'.
+
+    woz import --csv
+
+When adding a custom filepath, this parameter is not important. Wozniak will check the file type and triest to import from xls or csv, whatever works...
+
+## Todo
+
+This is what I want to implement in the future.
+
+- [ ] Multiple file support.
 
 ## Changelog
 
