@@ -21,7 +21,11 @@ class WozCommand < Thor
   desc "import [FOLDER]", "Generate the .strings files from Excel (or force to import them from csv). Pass the filename (or path) from the csv/xls file you wish to import."
   method_option :csv, :type => :boolean, :aliases => "-c", :default => false, :desc => "Force import from CSV instead of the default xls."
   def import(filepath=nil)
-    Woz::Builder.generate_strings(options[:csv], filepath)
+    if File.extname(filepath) == ".xls"
+      Woz::Builder.generate_strings(false, filepath)
+    else
+      Woz::Builder.generate_strings(options[:csv], filepath)
+    end
   end
 
   desc "setup", "Generate the configuration file."
