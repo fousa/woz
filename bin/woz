@@ -4,22 +4,27 @@ require "thor"
 require "woz"
 
 class WozCommand < Thor
-  desc "csv", "creates a csv with the current strings files."
-  def csv
-    Woz::Builder.generate_csv
+  desc "export", "Export the .strings files to Excel (or force an export to csv)."
+  method_option :both, :type => :boolean, :aliases => "-b", :default => false, :desc => "Force export to CSV and xls."
+  method_option :csv, :type => :boolean, :aliases => "-c", :default => false, :desc => "Force export to CSV instead of the default xls."
+  def export
+    if options[:both]
+      Woz::Builder.generate_csv
+      Woz::Builder.generate_xls
+    elsif options[:csv]
+      Woz::Builder.generate_csv
+    else
+      Woz::Builder.generate_xls
+    end
   end
 
-  desc "xls", "creates a xls with the current strings files."
-  def xls
-    Woz::Builder.generate_xls
+  desc "import [FOLDER]", "Generate the .strings files from Excel (or force to import them from csv). Pass the filename (or path) from the csv/xls file you wish to import."
+  method_option :csv, :type => :boolean, :aliases => "-c", :default => false, :desc => "Force import from CSV instead of the default xls."
+  def import(filepath=nil)
+    Woz::Builder.generate_strings(options[:csv], filepath)
   end
 
-  desc "strings", "creates the strings files from the available xls file."
-  def strings(filepath=nil)
-    Woz::Builder.generate_strings(filepath)
-  end
-
-  desc "setup", "creates the woz configuration file."
+  desc "setup", "Generate the configuration file."
   def setup
     Woz::Builder.init
   end

@@ -31,8 +31,12 @@ module Woz
         generate_translation_xls
       end
 
-      def generate_strings(xls_filepath=nil)
-        generate_translation_strings(xls_filepath)
+      def generate_strings(csv=false, filepath=nil)
+        if csv
+          generate_translation_strings_from_csv(filepath)
+        else
+          generate_translation_strings_from_xls(filepath)
+        end
       end
 
       protected
@@ -172,15 +176,50 @@ TEXT
         list
       end
 
-      def generate_translation_strings(xls_filepath=nil)
+      def parse_csv filepath
+        index = 0
+        languages = []
+        list = {}
+        CSV.foreach(filepath) do |row|
+          if index == 0
+            languages = row.select { |i| i != KEY_COLUMN && i != "" }
+            list = languages.inject({}) do |hash, language| 
+              hash[language] = {}
+              hash
+            end
+          else
+            languages.each_with_index do |language, e|
+              list[language][row[0]] = row[e+1]
+            end
+
+          end
+          index += 1
+        end
+        list
+      end
+
+      def generate_translation_strings_from_xls(xls_filepath=nil)
         filepath = File.expand_path(xls_filepath || Woz.config.xls_filename)
-        puts filepath.inspect
         file = File.join(filepath)
-        output_dir = get_output_dir(File.join(File.expand_path(Woz.config.xls_filename)))
 
         fail "! xls file not found, specify the filename in the .wozniak file" unless File.exists?(file)
 
         list = parse_xls file
+        generate_translation_strings(list)
+      end
+
+      def generate_translation_strings_from_csv(csv_filepath=nil)
+        filepath = File.expand_path(csv_filepath || Woz.config.csv_filename)
+        file = File.join(filepath)
+
+        fail "! csv file not found, specify the filename in the .wozniak file" unless File.exists?(file)
+
+        list = parse_csv filepath
+        generate_translation_strings(list)
+      end
+
+      def generate_translation_strings(list)
+        output_dir = get_output_dir(File.join(File.expand_path(Woz.config.xls_filename)))
         cocoa_array = "#define kLanguages [NSArray arrayWithObjects:"
         cocoa_languages_array = []
         list.keys.compact.each do |language|
