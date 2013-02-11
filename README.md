@@ -84,6 +84,13 @@ This is what I want to implement in the future.
 
 ## Changelog
 
+### 0.3.0
+
+- Export to CSV
+- Import from CSV
+- Better script naming (now import and export with custom options)
+- Fix import with custom filepath
+
 ### 0.2.0
 
 - Add filename/filepath behind the 'woz strings' command in order to use that xls file for strings generation.
